@@ -3,6 +3,24 @@
 A full-stack last-mile logistics platform for managing shipments, delivery agents, tracking, pricing, zones, notifications, and administrative operations through a unified web application.
 
 Built with a **React frontend, FastAPI backend, and MongoDB**, Shipora provides role-based workflows for customers, delivery agents, and administrators.
+## 🌐 Live Demo
+
+**Frontend:** https://shipora-drab.vercel.app
+
+**Backend / API:** https://shipora-api.onrender.com
+
+### 🚀 Deployment
+
+Shipora is deployed and hosted using:
+
+* **Frontend:** Vercel
+* **Backend:** Render
+
+### 🔗 Hosted Links
+
+* 🌐 **Live Frontend:** https://shipora-drab.vercel.app
+* ⚙️ **Backend API:** https://shipora-api.onrender.com
+
 
 🔗 **Repository:** https://github.com/piyali-22/shipora
 
@@ -320,24 +338,6 @@ Start the backend:
 
 ```bash
 python -m uvicorn server:app --reload
-```
-
-The API will be available at:
-
-```text
-http://127.0.0.1:8000
-```
-
-Interactive API documentation:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-Health check:
-
-```text
-http://127.0.0.1:8000/api/health
 ```
 
 ### 3. Frontend
