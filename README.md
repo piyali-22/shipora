@@ -1,220 +1,203 @@
-Shipora — Last Mile Logistics
+# Shipora — Last Mile Logistics
 
 A full-stack last-mile logistics platform for managing shipments, delivery agents, tracking, pricing, zones, notifications, and administrative operations through a unified web application.
 
-Built with a React frontend, FastAPI backend, and MongoDB, Shipora provides role-based workflows for customers, delivery agents, and administrators.
+Built with a **React frontend, FastAPI backend, and MongoDB**, Shipora provides role-based workflows for customers, delivery agents, and administrators.
 
-🔗 This Repo: https://github.com/piyali-22/shipora
+🔗 **Repository:** https://github.com/piyali-22/shipora
 
-Table of Contents
-The Problem
-How It Works
-Features
-Tech Stack
-Project Structure
-Running It Yourself
-API
-Database Design
-Authentication & Security
-Limitations
-Future Improvements
-Built By
-The Problem
+---
 
-Last-mile delivery involves more than simply moving a package from one location to another.
+## Table of Contents
 
-A logistics system needs to handle:
+- [The Problem](#the-problem)
+- [How It Works](#how-it-works)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Running It Yourself](#running-it-yourself)
+- [Database Design](#database-design)
+- [Authentication & Security](#authentication--security)
+- [API Overview](#api-overview)
+- [Application Roles](#application-roles)
+- [Future Improvements](#future-improvements)
+- [Current Status](#current-status)
+- [Built By](#built-by)
 
-shipment creation
-customer information
-delivery agents
-delivery zones
-pricing
-order assignment
-shipment tracking
-delivery attempts
-notifications
-administrative operations
+---
 
-Without a centralized system, these operations become difficult to coordinate and track.
+## The Problem
 
-Shipora brings these workflows together into a single full-stack platform.
+Last-mile delivery involves coordinating customers, shipments, delivery agents, delivery zones, pricing, tracking, and notifications across multiple operational workflows.
 
-The goal is to provide a structured logistics workflow where an order can move from:
+Without a centralized system, managing these processes can become difficult to track and maintain.
 
-Customer
-   ↓
-Shipment Creation
-   ↓
-Zone & Pricing
-   ↓
-Agent Assignment
-   ↓
-Delivery
-   ↓
-Tracking Events
-   ↓
-Completion / Delivery Attempt
-How It Works
-┌──────────────────────────────┐
-│        React Frontend        │
-│       Vite + JavaScript      │
-└──────────────┬───────────────┘
-               │
-               │ REST API
-               ▼
-┌──────────────────────────────┐
-│        FastAPI Backend       │
-│                              │
-│ Authentication               │
-│ Role Authorization           │
-│ Order Management             │
-│ Pricing                      │
-│ Agent Assignment             │
-│ Tracking                     │
-│ Notifications                │
-└──────────────┬───────────────┘
-               │
-               │ Motor / Async MongoDB
-               ▼
-┌──────────────────────────────┐
-│         MongoDB Atlas        │
-│                              │
-│ Users                        │
-│ Orders                       │
-│ Agents                       │
-│ Zones                        │
-│ Rate Cards                   │
-│ Tracking Events              │
-│ Notifications                │
-│ Delivery Attempts            │
-│ Audit Logs                   │
-└──────────────────────────────┘
-Shipment Flow
-Create Shipment
-       ↓
-Generate Tracking ID
-       ↓
-Determine Delivery Zone
-       ↓
-Calculate Applicable Rate
-       ↓
-Assign Delivery Agent
-       ↓
-Update Shipment Status
-       ↓
-Create Tracking Events
-       ↓
-Delivery Attempt
-       ↓
-Delivered / Further Attempt
-Features
-📦 Shipment Management
-Create new shipments
-Generate unique tracking IDs
-View order details
-Manage shipment status
-View customer orders
-Track delivery progress
-Record delivery attempts
-📍 Shipment Tracking
+**Shipora closes that gap:** customers can create and track shipments, agents can manage assigned deliveries, and administrators can manage orders, zones, agents, and pricing through a unified platform.
 
-Shipora maintains a tracking history for each order rather than storing only the current status.
+The project focuses on bringing the major components of a last-mile logistics workflow into a single full-stack application.
 
-Each tracking event can be associated with:
+---
 
-order
-status
-timestamp
-tracking history
+## How It Works
 
-This allows a shipment's journey to be followed throughout its lifecycle.
+```text
+Customer / Agent / Admin
+          |
+          v
+   +------------------+
+   |  React Frontend  |
+   |      (Vite)      |
+   +--------+---------+
+            |
+            | REST API
+            v
+   +------------------+
+   | FastAPI Backend  |
+   |                  |
+   | Routes           |
+   | Services         |
+   | Authentication   |
+   | Validation       |
+   +--------+---------+
+            |
+            v
+   +------------------+
+   |     MongoDB      |
+   |                  |
+   | Users            |
+   | Orders           |
+   | Agents           |
+   | Zones            |
+   | Rate Cards       |
+   | Tracking Events  |
+   | Notifications    |
+   +------------------+
+```
 
-🚚 Delivery Agent Management
+### Shipment Workflow
 
-Administrators can manage delivery agents and their operational information.
+```text
+Customer creates shipment
+          ↓
+Pricing is calculated
+          ↓
+Tracking ID is generated
+          ↓
+Order is stored in MongoDB
+          ↓
+Delivery agent is assigned
+          ↓
+Order moves through delivery statuses
+          ↓
+Tracking events are recorded
+          ↓
+Shipment is delivered
+```
 
-The system supports:
+---
 
-agent profiles
-agent availability
-agent assignment
-current delivery zones
-assigned orders
-🗺️ Zone Management
+## Features
 
-Delivery zones are managed using pincode-based configuration.
+### 👤 Authentication & Authorization
 
-Administrators can:
+- User registration and login
+- JWT-based authentication
+- Protected application routes
+- Role-based workflows
+- Customer, Agent, and Admin access
+- Secure password handling
 
-create zones
-associate pincodes with zones
-activate/deactivate zones
-manage zone information
-💰 Rate Card & Pricing
+### 📦 Shipment & Order Management
 
-Shipora includes a configurable rate-card system.
+- Create new shipments
+- Generate unique tracking IDs
+- View customer orders
+- View detailed order information
+- Manage order statuses
+- Assign delivery agents
+- Record delivery attempts
+- Track shipment progress
 
-Rates can be configured based on:
+### 🚴 Delivery Agent Management
 
-order type
-pricing scope
-active/inactive status
-delivery zone configuration
+- Agent dashboard
+- View assigned deliveries
+- Agent profile management
+- Agent availability tracking
+- Zone assignment
+- Delivery tracking
 
-This keeps pricing logic separate from the rest of the order workflow.
+### 📍 Delivery Zone Management
 
-👤 Role-Based Authentication
+Administrators can manage delivery zones and their associated pincodes.
 
-Different users have different responsibilities within the platform.
+- Create and manage zones
+- Activate or deactivate zones
+- Manage zone pincodes
+- Associate agents with zones
 
-Customer
-   │
-   ├── Create shipment
-   ├── View orders
-   └── Track shipment
+### 💰 Pricing & Rate Cards
 
-Agent
-   │
-   ├── View assigned orders
-   ├── Update delivery progress
-   └── Manage delivery activity
+Shipora includes a centralized rate-card system for managing delivery pricing.
 
-Admin
-   │
-   ├── Manage orders
-   ├── Manage agents
-   ├── Manage zones
-   ├── Manage rate cards
-   └── Monitor operations
-🔔 Notifications
+- Create rate cards
+- Manage active and inactive rates
+- Configure pricing based on order type
+- Configure pricing based on scope
+- Apply pricing rules to shipments
 
-The backend includes a notification service for managing user notifications and notification history.
+### 📍 Shipment Tracking
 
-Email configuration is also supported through environment variables.
+Each shipment can have a history of tracking events.
 
-📊 Admin Operations
+- Unique tracking IDs
+- Order status updates
+- Tracking event history
+- Timestamped events
+- Public shipment tracking
 
-The admin interface provides dedicated management pages for:
+### 🔔 Notifications
 
-Orders
-Agents
-Zones
-Rate Cards
-Dashboard operations
-Tech Stack
-Layer	Technologies
-Frontend	React, JavaScript, Vite
-Styling	Tailwind CSS
-Backend	Python, FastAPI
-API Server	Uvicorn
-Validation	Pydantic
-Database	MongoDB Atlas
-Database Driver	Motor
-Authentication	JWT
-Password Security	Password Hashing
-Version Control	Git, GitHub
-Project Structure
+The platform supports notifications for important delivery events.
+
+- Recipient-based notifications
+- Notification history
+- Timestamped notifications
+- Notification management
+
+### 🛡️ Admin Operations
+
+Administrators can manage the major logistics operations from dedicated dashboards.
+
+- Order management
+- Agent management
+- Zone management
+- Rate card management
+- Shipment monitoring
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React |
+| Build Tool | Vite |
+| Backend | Python, FastAPI |
+| API Server | Uvicorn |
+| Database | MongoDB |
+| Database Driver | Motor |
+| Validation | Pydantic |
+| Authentication | JWT |
+| Styling | CSS / Tailwind CSS |
+| Package Management | npm / pip |
+| Version Control | Git & GitHub |
+
+---
+
+## Project Structure
+
+```text
 shipora/
 │
 ├── backend/
@@ -265,13 +248,14 @@ shipora/
 │   ├── utils/
 │   │   └── tracking_id.py
 │   │
-│   ├── server.py
+│   ├── .env.example
 │   ├── requirements.txt
-│   └── .env.example
+│   └── server.py
 │
 ├── frontend/
 │   │
 │   ├── public/
+│   │
 │   ├── src/
 │   │   ├── components/
 │   │   ├── context/
@@ -282,49 +266,166 @@ shipora/
 │   │   ├── index.css
 │   │   └── main.jsx
 │   │
+│   ├── .env.example
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── vite.config.js
-│   └── .env.example
+│   └── tailwind.config.js
 │
 ├── .gitignore
 ├── README.md
 └── ...
-Running It Yourself
-1. Clone the repository
+```
+
+---
+
+## Running It Yourself
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/piyali-22/shipora.git
 cd shipora
-2. Backend
+```
+
+### 2. Backend
+
+Move into the backend directory:
+
+```bash
 cd backend
+```
 
 Create a virtual environment:
 
+```bash
 python -m venv venv
+```
 
 Activate it on Windows:
 
+```powershell
 venv\Scripts\activate
+```
 
 Install dependencies:
 
+```bash
 pip install -r requirements.txt
-3. Configure MongoDB
+```
 
-Create:
+Create a `.env` file using `.env.example` as a reference.
 
-backend/.env
+Start the backend:
 
-using:
+```bash
+python -m uvicorn server:app --reload
+```
 
-backend/.env.example
+The API will be available at:
 
-as the template.
+```text
+http://127.0.0.1:8000
+```
 
-Example:
+Interactive API documentation:
 
-MONGO_URI=your_mongodb_connection_string
+```text
+http://127.0.0.1:8000/docs
+```
+
+Health check:
+
+```text
+http://127.0.0.1:8000/api/health
+```
+
+### 3. Frontend
+
+Open another terminal:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Vite will display the local frontend URL in the terminal.
+
+---
+
+## Database Design
+
+Shipora uses MongoDB for storing application data.
+
+### Main Collections
+
+| Collection | Purpose |
+|---|---|
+| `users` | Customer, agent, and administrator accounts |
+| `orders` | Shipment and order information |
+| `agents` | Delivery agent information |
+| `zones` | Delivery zones and pincodes |
+| `rate_cards` | Delivery pricing configuration |
+| `tracking_events` | Shipment tracking history |
+| `delivery_attempts` | Delivery attempt records |
+| `notifications` | User notifications |
+| `audit_logs` | Operational audit information |
+
+Indexes are created for frequently queried fields such as:
+
+- Email
+- Tracking ID
+- Customer ID
+- Agent ID
+- Order status
+- Creation timestamp
+- Zone
+- Notification recipient
+
+---
+
+## Authentication & Security
+
+Shipora uses JWT-based authentication for protected API endpoints.
+
+The authentication flow is:
+
+```text
+User Login
+    ↓
+Credentials Validated
+    ↓
+JWT Token Generated
+    ↓
+Token Sent With Protected Requests
+    ↓
+Backend Validates Token
+    ↓
+Authorized Resource Returned
+```
+
+Sensitive configuration is stored using environment variables.
+
+The actual `.env` file is excluded from Git using `.gitignore`.
+
+Example configuration:
+
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/
 MONGO_DB_NAME=shipora
 
-JWT_SECRET=your_secret_key
+JWT_SECRET=your-secret-key
 JWT_ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
@@ -337,181 +438,119 @@ SMTP_PASSWORD=
 SMTP_FROM_EMAIL=notifications@shipora.app
 
 APP_ENV=development
+```
 
-Do not commit .env to GitHub.
+> **Never commit real database credentials, JWT secrets, or other sensitive environment variables to GitHub.**
 
-4. Start the Backend
+---
 
-From the backend directory:
+## API Overview
 
-python -m uvicorn server:app --reload
+The backend is organized into modular API routes.
 
-The API will be available at:
+| Route | Purpose |
+|---|---|
+| `/auth` | Registration and authentication |
+| `/orders` | Shipment and order operations |
+| `/agents` | Delivery agent operations |
+| `/zones` | Delivery zone management |
+| `/rate-card` | Pricing and rate card management |
+| `/notifications` | Notification operations |
+| `/api/health` | Application and database health check |
 
-http://127.0.0.1:8000
+The API can also be explored through FastAPI's interactive Swagger documentation:
 
-Health check:
-
-http://127.0.0.1:8000/api/health
-
-Interactive API documentation:
-
+```text
 http://127.0.0.1:8000/docs
-5. Start the Frontend
+```
 
-Open another terminal:
+---
 
-cd frontend
+## Application Roles
 
-Install dependencies:
+### Customer
 
-npm install
+Customers can:
 
-Start the development server:
+- Register and log in
+- Create shipments
+- View orders
+- Track shipments
+- View order details
+- Receive notifications
+- Manage their profile
 
-npm run dev
+### Delivery Agent
 
-The frontend will normally be available at:
+Agents can:
 
-http://localhost:5173
-API
+- Log in to the platform
+- View assigned deliveries
+- Track orders
+- Manage delivery information
+- Manage their profile
+- Manage availability
 
-The backend is organized around REST endpoints for the main logistics workflows.
+### Administrator
 
-Authentication
-/auth
+Administrators can:
 
-Handles registration, login, and authentication-related operations.
+- View and manage orders
+- Manage delivery agents
+- Manage zones
+- Manage rate cards
+- Monitor logistics operations
 
-Orders
-/orders
+---
 
-Handles shipment and order operations.
+## Future Improvements
 
-Agents
-/agents
+Some possible improvements for future versions include:
 
-Handles delivery-agent operations.
+- 📍 Real-time GPS delivery tracking
+- 🗺️ Route optimization
+- 🤖 Automated delivery-agent assignment
+- 📊 Advanced logistics analytics
+- 📱 SMS and email notification integration
+- 💳 Payment gateway integration
+- 🧪 Expanded automated test coverage
+- 🔄 CI/CD pipeline
+- ☁️ Production deployment
+- 📈 Advanced operational reporting
 
-Zones
-/zones
+---
 
-Handles delivery-zone management.
+## Current Status
 
-Rate Cards
-/rate-card
+**Development**
 
-Handles configurable pricing information.
+The core full-stack architecture is implemented with:
 
-Notifications
-/notifications
+- React frontend
+- FastAPI backend
+- MongoDB database
+- JWT authentication
+- Role-based workflows
+- Shipment management
+- Delivery-agent management
+- Tracking
+- Pricing
+- Zones
+- Notifications
+- Administrative dashboards
 
-Handles notification-related operations.
+---
 
-Database Design
+## Built By
 
-MongoDB is organized into collections representing the main entities of the logistics system.
+**Piyali Khaitan**
 
-users
-   │
-   ├── orders
-   │      │
-   │      ├── tracking_events
-   │      └── delivery_attempts
-   │
-   └── agents
+B.Tech Computer Science & Engineering
 
-zones
-   │
-   └── rate_cards
+GitHub: https://github.com/piyali-22/shipora
 
-notifications
-audit_logs
+---
 
-Indexes are created for frequently queried fields such as:
+## License
 
-email
-tracking ID
-customer ID
-assigned agent
-order status
-timestamps
-zone
-agent availability
-
-This helps keep common queries efficient as the dataset grows.
-
-Authentication & Security
-
-Shipora uses JWT-based authentication for protected API access.
-
-Security-related functionality includes:
-
-JWT access tokens
-Password hashing
-Protected routes
-Role-based authorization
-Environment-based secrets
-MongoDB credentials stored outside source control
-Frontend protected routes
-
-Sensitive configuration is excluded from Git using .gitignore.
-
-Screenshots
-
-Screenshots can be added here as the application UI evolves.
-
-Example:
-
-## Screenshots
-
-### Customer Dashboard
-
-![Customer Dashboard](screenshots/customer-dashboard.png)
-
-### Admin Dashboard
-
-![Admin Dashboard](screenshots/admin-dashboard.png)
-
-### Shipment Tracking
-
-![Shipment Tracking](screenshots/tracking.png)
-What I Learned
-
-Building Shipora involved working across the complete application stack rather than treating the frontend and backend as separate pieces.
-
-Some of the main areas covered were:
-
-Designing REST APIs with FastAPI
-Structuring a backend using routes, schemas, models, and services
-Async MongoDB operations using Motor
-JWT authentication and authorization
-Role-based application workflows
-Database indexing
-React component and page organization
-Frontend API integration
-Environment-based configuration
-Git and GitHub workflow
-Limitations
-Email functionality requires SMTP configuration.
-Local development requires a MongoDB connection.
-Deployment configuration is not included yet.
-Some operational workflows are represented through application logic rather than integration with real logistics providers.
-Real-time GPS/driver location tracking is not currently implemented.
-Future Improvements
-📍 Real-time delivery-agent location tracking
-🗺️ Route optimization for delivery agents
-📱 Mobile application for delivery agents
-🔔 Real-time push notifications
-📊 Advanced logistics analytics
-💳 Online payment integration
-☁️ Production cloud deployment
-🧪 Expanded automated test coverage
-⚙️ CI/CD pipeline
-📦 Integration with external shipping/carrier APIs
-Built By
-Piyali Khaitan
-
-B.Tech CSE Student | Full-Stack Development & Software Engineering
-
-GitHub: @piyali-22
+This project is developed for educational and development purposes.
